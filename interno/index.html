@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Servidor Interno</title>
+  <style>
+    body { background: #0d0d0d; color: #00c8ff; font-family: monospace; padding: 3em; }
+    h1   { color: #00ff88; font-size: 2em; }
+    .ip  { color: #ff6b35; font-weight: bold; }
+    .ok  { color: #00ff88; }
+  </style>
+</head>
+<body>
+  <h1>&#x2714; PIVOTING EXITOSO</h1>
+  <p>Estás viendo este servidor desde la <strong>red interna</strong>.</p>
+  <p>IP del servidor: <span class="ip">10.10.0.5</span></p>
+  <p>Acceso directo desde Kali: <span style="color:#ff4444">BLOQUEADO</span></p>
+  <p>Acceso via túnel SSH: <span class="ok">ACTIVO</span></p>
+  <hr style="border-color:#333">
+  <pre style="color:#888">
+  [KALI] ---SSH-L---> [DMZ 172.28.0.10 / 10.10.0.2] ----> [WEB 10.10.0.5:80]
+                            servidor-dmz                    servidor-interno
+  </pre>
+</body>
+</html>

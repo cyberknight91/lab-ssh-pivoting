@@ -1,0 +1,83 @@
+services:
+
+  # ─────────────────────────────────────────────
+  # ATACANTE — solo en red_externa
+  # NO tiene ruta a red_interna → aislamiento real
+  # Acceder con: docker exec -it atacante bash
+  # ─────────────────────────────────────────────
+  atacante:
+    build: ./atacante
+    hostname: kali-atacante
+    container_name: atacante
+    networks:
+      red_externa:
+        ipv4_address: 172.28.0.100
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────────
+  # SERVIDOR DMZ — el "trampolín" para el pivoting
+  # Conectado a ambas redes
+  # ─────────────────────────────────────────────
+  dmz:
+    build: ./dmz
+    hostname: servidor-dmz
+    container_name: dmz
+    networks:
+      red_externa:
+        ipv4_address: 172.28.0.10
+      red_interna:
+        ipv4_address: 10.10.0.2
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────────
+  # SERVIDOR WEB INTERNO — objetivo HTTP (puerto 80)
+  # Solo accesible desde red_interna
+  # ─────────────────────────────────────────────
+  web:
+    image: nginx:alpine
+    hostname: web-interno
+    container_name: web_interno
+    volumes:
+      - ./interno/index.html:/usr/share/nginx/html/index.html:ro
+    networks:
+      red_interna:
+        ipv4_address: 10.10.0.5
+    restart: unless-stopped
+
+  # ─────────────────────────────────────────────
+  # BASE DE DATOS INTERNA — objetivo MySQL (puerto 3306)
+  # Solo accesible desde red_interna
+  # ─────────────────────────────────────────────
+  db:
+    image: mysql:8
+    hostname: db-interna
+    container_name: db_interna
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_USER: lab
+      MYSQL_PASSWORD: lab123
+      MYSQL_DATABASE: labdb
+    networks:
+      red_interna:
+        ipv4_address: 10.10.0.10
+    restart: unless-stopped
+
+# ─────────────────────────────────────────────
+# REDES
+# red_externa : atacante + DMZ (172.28.0.0/24)
+# red_interna : DMZ + web + db (10.10.0.0/24)
+#               atacante NO está aquí → aislamiento real
+# ─────────────────────────────────────────────
+networks:
+  red_externa:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/24
+
+  red_interna:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.10.0.0/24
