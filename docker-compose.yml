@@ -1,20 +1,6 @@
 services:
 
   # ─────────────────────────────────────────────
-  # ATACANTE — solo en red_externa
-  # NO tiene ruta a red_interna → aislamiento real
-  # Acceder con: docker exec -it atacante bash
-  # ─────────────────────────────────────────────
-  atacante:
-    build: ./atacante
-    hostname: kali-atacante
-    container_name: atacante
-    networks:
-      red_externa:
-        ipv4_address: 172.28.0.100
-    restart: unless-stopped
-
-  # ─────────────────────────────────────────────
   # SERVIDOR DMZ — el "trampolín" para el pivoting
   # Conectado a ambas redes
   # ─────────────────────────────────────────────
@@ -64,9 +50,8 @@ services:
 
 # ─────────────────────────────────────────────
 # REDES
-# red_externa : atacante + DMZ (172.28.0.0/24)
+# red_externa : Kali (host) + DMZ (172.28.0.0/24)
 # red_interna : DMZ + web + db (10.10.0.0/24)
-#               atacante NO está aquí → aislamiento real
 # ─────────────────────────────────────────────
 networks:
   red_externa:

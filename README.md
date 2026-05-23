@@ -24,7 +24,7 @@ chmod +x ~/.docker/cli-plugins/docker-compose
 ## Levantar el lab
 
 ```bash
-git clone https://github.com/TU_USUARIO/lab-ssh-pivoting.git
+git clone https://github.com/cyberknight91/lab-ssh-pivoting.git
 cd lab-ssh-pivoting
 sudo docker compose up -d --build
 ```

@@ -1,3 +1,4 @@
 # No subir datos generados por Docker
 **/__pycache__/
 *.pyc
+/index.html
